@@ -12,3 +12,22 @@ export async function fetchWithTimeout(resource: RequestInfo, options?: RequestI
 
     return response;
 }
+
+
+export function clearHistory() {
+    localStorage.removeItem('github');
+}
+
+export function getHistory() {
+    let items = [];
+    let itemsJson = localStorage.getItem('github');
+    if (itemsJson != null) {
+        items = JSON.parse(itemsJson);
+    }
+    return items;
+}
+
+export function appendHistory(item: any) {
+    let items = getHistory();
+    localStorage.setItem('github', JSON.stringify([item, ...items]));
+}

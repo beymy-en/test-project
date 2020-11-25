@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {fetchWithTimeout} from "./utils";
+import {appendHistory, fetchWithTimeout} from "./utils";
 
 
 function ApiGithub() {
@@ -8,13 +8,20 @@ function ApiGithub() {
 
     useEffect(() => {
         timer.current = setInterval(() => {
+            const startTime = Date.now();
+            let endTime;
             fetchWithTimeout('https://api.github.com', {
                 cache: 'no-cache',
                 timeout: 5000,
             }).then(r => r.json()).then(result => {
                 setData(result);
+                endTime = Date.now();
+                const item = {status: 'ok', startTime, endTime}
+                appendHistory(item);
             }).catch((e) => {
-                console.error(e);
+                endTime = Date.now();
+                const item = {status: 'error', startTime, endTime}
+                appendHistory(item);
             });
         }, 5000);
 
